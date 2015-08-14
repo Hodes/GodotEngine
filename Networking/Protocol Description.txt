@@ -1,0 +1,35 @@
+Protocol Packet 
+[int protocolid]
+[4byte packetsequence 0-255 ]
+{packet data}
+
+
+Connection hanshake: 
+
+ * The handshake is a packet sent to the server
+ * The Client presents to the Server with a packet following the protocol
+	- The data of first packet is the current time of computer
+	- At this moment the client is able to be registered
+	Packet:
+	----------------
+	[protocol header]...
+	{conn [int timeinmillis]}
+
+ * The Server responds to the Client with the current time of server
+	- The server will keep sending the handshake back for a defined period of time
+	until the client starts to send the ping 
+	Packet:
+	----------------
+	[protocol header]...
+	{accept [int timeinmillis]}
+
+Connection maintainability: 
+
+ * The Client keeps sending a PING packet to the server since a defined period of time
+	Packet:
+	----------------
+	[protocol header]...
+	{ping [int timeinmillis]}
+
+ * The Server answers the PING 
+
