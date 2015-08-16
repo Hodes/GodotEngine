@@ -2,7 +2,7 @@
 # Author: HODES 
 #        (Henrique Otavio do Espirito Santo Becker)
 #
-# A Class to help on TCP|UDP connection within Godot Game Engine
+# A Class to help on TCP connection within Godot Game Engine
 # Credits on exelent reserarch resources, on how to handle 
 # Networking related in GDScript: 
 #
@@ -22,7 +22,6 @@ extends Node
 class Client:
 	var tcpConnection = null
 	var tcpStream = null
-	var udpPacketPeer = null
 	var ip = ""
 	var data = null
 	# Just to check if is host uppon data receiving
@@ -30,7 +29,6 @@ class Client:
 
 class Server:
 	var tcpServer = null
-	var udpPacketPeer = null
 	var clients = []
 
 var serverObject = null
@@ -40,23 +38,14 @@ var isConnecting = false
 var isReady = false
 
 export(String) var ip = "127.0.0.1"
-export(int) var tcpPort = 49652
-export(int) var udpPort = 49650
-export(bool) var enableUDP = true
+export(int) var port = 49652
 
 func setIP(ip):
 	self.ip = ip
-func setTCPPort(port):
-	self.tcpPort = int(port)
-func setUDPPort(port):
-	self.udpPort = int(port)
+func setPort(port):
+	self.port = int(port)
 	
-func _init(ip, tcpPort = null, udpPort = null):
-	self.ip = ip
-	if tcpPort != null:
-		self.tcpPort = int(tcpPort)
-	if udpPort != null:
-		self.udpPort = int(udpPort)
+func _ready():
 	#As HOST Signals
 	self.add_user_signal("onClientConnect",[
 		{"name":"oClient", "type":TYPE_OBJECT}
@@ -110,12 +99,12 @@ func _process( delta ):
 	elif(not self.isHost):
 		if not self.isReady: # it's inside _process, so if last status was STATUS_CONNECTING
 			if clientObject.tcpConnection.get_status() == StreamPeerTCP.STATUS_CONNECTED:
-				_onClientReady(ip, self.tcpPort)
+				_onClientReady(ip, self.port)
 				return # skipping this _process run
 		if (clientObject.tcpConnection.get_status() == StreamPeerTCP.STATUS_NONE 
 			or clientObject.tcpConnection.get_status() == StreamPeerTCP.STATUS_ERROR):
 			print( "Server disconnected? " )
-			_onDisconnectAsClient(ip,self.tcpPort)
+			_onDisconnectAsClient(ip,self.port)
 			return # skip the process because its disconnected
 		#Process the server received data
 		if self.isReady:
@@ -133,14 +122,11 @@ func clearStates():
 func disconnect():
 	if(self.isHost and serverObject != null):
 		serverObject.clients.clear()
-		serverObject.udpPacketPeer.close()
 		serverObject.tcpServer.stop()
 		print("Server Disconnected")
 	elif(not self.isHost and clientObject != null):
 		if(clientObject.tcpConnection.is_connected()):
 			clientObject.tcpConnection.disconnect()
-		if(clientObject.udpPacketPeer != null):
-			clientObject.udpPacketPeer.close()
 		print("Client connection closed")
 	clearStates()
 	set_process( false )
@@ -155,21 +141,15 @@ func start_server():
 	#also for some reliable operations
 	serverObject = Server.new()
 	serverObject.tcpServer = TCP_Server.new()
-	serverObject.udpPacketPeer = PacketPeerUDP.new()
 	#Try to listen for connections
-	if serverObject.tcpServer.listen( self.tcpPort ) == 0:
-		print("Server started listening on port ", self.tcpPort )
+	if serverObject.tcpServer.listen( self.port ) == 0:
+		print("Server started listening on port ", self.port )
 	else:
-		print("Failed to start server on port ", self.tcpPort)
+		print("Failed to start server on port ", self.port)
 		return false
-	#Start UDP
-	if (serverObject.udpPacketPeer.listen(self.udpPort) != OK):
-		print("Error start listening UDP on port ", self.udpPort)
-		return false
-	else:
-		print("Listening UDP on port ", self.udpPort)
-		self.isHost = true
-		self.isReady = true
+	
+	self.isHost = true
+	self.isReady = true
 	set_process( true )
 	#Server started success
 	return true
@@ -183,22 +163,24 @@ func start_client():
 	clientObject = Client.new()
 	clientObject.tcpConnection = StreamPeerTCP.new()
 	# Starts the connection
-	clientObject.tcpConnection.connect( ip, self.tcpPort )
+	clientObject.tcpConnection.connect( ip, self.port )
 	# Create the packet stream
 	clientObject.tcpStream = PacketPeerStream.new()
 	clientObject.tcpStream.set_stream_peer( clientObject.tcpConnection )
 	# since connection is created from StreamPeerTCP it also inherits its constants
 	# get_status() returns following (int 0-3) values:
 	if clientObject.tcpConnection.get_status() == StreamPeerTCP.STATUS_CONNECTED:
-		_onClientReady(ip, self.tcpPort)
+		_onClientReady(ip, self.port)
 		return true
 	elif clientObject.tcpConnection.get_status() == StreamPeerTCP.STATUS_CONNECTING:
-		print( "Trying to connect ",ip," :",self.tcpPort)
+		print( "Trying to connect ",ip," :",self.port)
 	elif (clientObject.tcpConnection.get_status() == StreamPeerTCP.STATUS_NONE 
 		or clientObject.tcpConnection.get_status() == StreamPeerTCP.STATUS_ERROR):
-		print( "Couldn't connect to "+ip+" :",self.tcpPort)
-		_onDisconnectAsClient(ip, self.tcpPort)
+		print( "Couldn't connect to "+ip+" :",self.port)
+		_onDisconnectAsClient(ip, self.port)
 		return false
+	#Just to make sure it will not be set as host
+	self.isHost = false
 	set_process(true) # start processing so it can check if connected success
 	isConnecting = true
 	return true
@@ -224,10 +206,6 @@ func sendData(data, to=null):
 	else:
 		_sendDataAsClient(data)
 	return true
-
-# This will send thru UDP protocoll usually 
-func sendImmediateData(data, to=null):
-	pass
 
 func _sendDataAsHost(data, to=null):
 	if(to!=null):

@@ -1,12 +1,9 @@
 extends Node
 
-var Connection = preload("res://Connection.gd")
-
 var oConnection = null
 
 var txIP = null
 var txPort = null
-var txUDPPort = null
 var btnStartServer = null
 var btnStartClient = null
 var btnDisconnect = null
@@ -16,16 +13,15 @@ var input = null
 func _ready():
 	txIP = get_node("txIP")
 	txPort = get_node("txPort")
-	txUDPPort = get_node("txUDPPort")
 	btnStartServer = get_node("btnStartServer")
 	btnStartClient = get_node("btnStartClient")
 	btnDisconnect = get_node("btnDisconnect")
 	output = get_node("output")
 	input = get_node("input")
 	
-	oConnection = Connection.new(txIP.get_text())
+	oConnection = get_node("/root/TCPConnection")
 	# Add the node to the scene tree, so it can _process
-	add_child(oConnection)
+	#add_child(oConnection)
 	#Register the signals for client handling
 	oConnection.connect("onConnect", self, "onConnectAsClient")
 	oConnection.connect("onDisconnect", self, "onDisconnect")
@@ -43,8 +39,7 @@ func handleDisconnect():
 
 func setConnectionInfo():
 	oConnection.setIP(txIP.get_text())
-	oConnection.setTCPPort(txPort.get_text())
-	oConnection.setUDPPort(txUDPPort.get_text())
+	oConnection.setPort(txPort.get_text())
 
 func _on_btnStartServer_pressed():
 	setConnectionInfo()
@@ -52,18 +47,18 @@ func _on_btnStartServer_pressed():
 		btnStartServer.set_disabled(true)
 		btnStartClient.set_disabled(true)
 		btnDisconnect.set_disabled(false)
-		output.add_text( "Server started at port "+str(oConnection.tcpPort)); output.newline()
+		output.add_text( "Server started at port "+str(oConnection.port)); output.newline()
 	else:
 		output.add_text( "Error starting server, maybe the por is already in use."); output.newline()
 
 func _on_btnStartClient_pressed():
 	setConnectionInfo()
-	output.add_text( "Starting as client on "+oConnection.ip+":"+str(oConnection.tcpPort)); output.newline()
+	output.add_text( "Starting as client on "+oConnection.ip+":"+str(oConnection.port)); output.newline()
 	btnStartServer.set_disabled(true)
 	btnStartClient.set_disabled(true)
 	btnDisconnect.set_disabled(false)
 	if not oConnection.start_client():
-		output.add_text( "Error starting client on "+oConnection.ip+":"+str(oConnection.tcpPort)); output.newline()
+		output.add_text( "Error starting client on "+oConnection.ip+":"+str(oConnection.port)); output.newline()
 		handleDisconnect()
 
 func _on_btnDisconnect_pressed():
