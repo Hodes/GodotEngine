@@ -1,15 +1,15 @@
-Protocol Packet 
+Protocol Packet Header
 [int protocolid]
 [4byte packetsequence 0-255 ]
 {packet data}
 
-
+###############
 Connection hanshake: 
 
  * The handshake is a packet sent to the server
  * The Client presents to the Server with a packet following the protocol
 	- The data of first packet is the current time of computer
-	- At this moment the client is able to be registered
+	- At this moment the client is able to be registered as a client in the server
 	Packet:
 	----------------
 	[protocol header]...
@@ -23,6 +23,7 @@ Connection hanshake:
 	[protocol header]...
 	{accept [int timeinmillis]}
 
+################
 Connection maintainability: 
 
  * The Client keeps sending a PING packet to the server since a defined period of time
@@ -32,4 +33,30 @@ Connection maintainability:
 	{ping [int timeinmillis]}
 
  * The Server answers the PING 
+	Packet:
+	----------------
+	[protocol header]...
+	{pong [int timeinmillis]}
+	
+ * If server doesn't receive client PING or any data for a TIMEOUT defined time, the client
+   is declared disconnected. Same for the client, if does not receive any server data for a TIMEOUT, 
+   the connection is declared closed.
+
+################
+Packet reliability: 
+
+ * Since the server and client have the time which each one is working. Both are able to know 
+ if some packet is outdated.  
+ 
+ * URGENT packets - The application must be able to have some urgent packets buffer, which will 
+ be keep being sent until the AKC (aknowledment) of that pack has been received. This process will 
+ never stop until the connection has been lost/reset because the data involved really must arrive. 
+	- Client: Hey buddy, pick this {here is the data}....
+	- Client: Hey buddy, pick this {here is the data}....
+	- Client: Hey buddy, pick this {here is the data}....
+	- Server: Ok I got it ! <- NOT RECEIVED
+	- Client: Hey buddy, pick this {here is the data}....
+	- Client: Hey buddy, pick this {here is the data}....
+	- Server: Ok I got it ! 
+	Then the client stops sending that URGENT data
 
