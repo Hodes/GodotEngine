@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resource_file type="PackedScene" subresource_count="3" version="1.1" version_name="Godot Engine v1.1.stable.custom_build">
 	<ext_resource path="res://charings.fnt" type="Font"></ext_resource>
-	<ext_resource path="res://NavButton.gd" type="Script"></ext_resource>
+	<ext_resource path="res://nav_button.gd" type="Script"></ext_resource>
 	<main_resource>
 		<dictionary name="_bundled" shared="false">
 			<string> "conn_count" </string>
@@ -31,7 +31,7 @@
 				<string> "rounded_values" </string>
 				<string> "text" </string>
 				<string> "percent_visible" </string>
-				<string> "TrailParcticleSample" </string>
+				<string> "TrailParticleSample" </string>
 				<string> "Button" </string>
 				<string> "size_flags/vertical" </string>
 				<string> "toggle_mode" </string>
@@ -55,7 +55,7 @@
 						<string> "2D" </string>
 						<dictionary  shared="false">
 							<string> "ofs" </string>
-							<vector2> -250.084, -222.84 </vector2>
+							<vector2> -44.8763, -28.0729 </vector2>
 							<string> "snap_grid" </string>
 							<bool> True </bool>
 							<string> "snap_offset" </string>
@@ -75,7 +75,7 @@
 							<string> "snap_step" </string>
 							<vector2> 10, 10 </vector2>
 							<string> "zoom" </string>
-							<real> 0.598737 </real>
+							<real> 1 </real>
 						</dictionary>
 						<string> "3D" </string>
 						<dictionary  shared="false">
@@ -195,8 +195,8 @@
 				<real> 260 </real>
 				<real> 111 </real>
 				<string> "Trail Particle System" </string>
-				<resource  resource_type="Script" path="res://NavButton.gd">  </resource>
-				<string> "trail_parcticle" </string>
+				<resource  resource_type="Script" path="res://nav_button.gd">  </resource>
+				<string> "trail_particle" </string>
 				<real> 120 </real>
 				<real> 141 </real>
 				<string> "Top Down Vehicle Movement" </string>

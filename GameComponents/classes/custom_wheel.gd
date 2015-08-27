@@ -1,12 +1,13 @@
-extends "Wheel.gd"
+extends "wheel.gd"
 
 var tiremark = null
 
 func _ready():
 	tiremark = get_node("TireMarks")
 
-func startSlide():
+func start_slide():
 	tiremark.set_emitting(true)
 
-func stopSlide():
+func stop_slide():
 	tiremark.set_emitting(false)
+

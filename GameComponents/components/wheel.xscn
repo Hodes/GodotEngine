@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resource_file type="PackedScene" subresource_count="4" version="1.1" version_name="Godot Engine v1.1.stable.custom_build">
-	<ext_resource path="res://classes/CustomWheel.gd" type="Script"></ext_resource>
+	<ext_resource path="res://classes/custom_wheel.gd" type="Script"></ext_resource>
 	<ext_resource path="res://sprites/wheel.png" type="Texture"></ext_resource>
 	<resource type="RectangleShape2D" path="local://2">
 		<real name="custom_solver_bias"> 0 </real>
@@ -14,7 +14,7 @@
 			<string> "conns" </string>
 			<int_array  len="0"> 				 </int_array>
 			<string> "names" </string>
-			<string_array  len="63">
+			<string_array  len="65">
 				<string> "WheelJoint" </string>
 				<string> "PinJoint2D" </string>
 				<string> "visibility/behind_parent" </string>
@@ -23,9 +23,10 @@
 				<string> "bias/bias" </string>
 				<string> "script/script" </string>
 				<string> "__meta__" </string>
-				<string> "hasTorque" </string>
-				<string> "hasSterring" </string>
+				<string> "has_torque" </string>
+				<string> "has_sterring" </string>
 				<string> "grip" </string>
+				<string> "relative_rot" </string>
 				<string> "WheelBody" </string>
 				<string> "RigidBody2D" </string>
 				<string> "input/pickable" </string>
@@ -60,6 +61,7 @@
 				<string> "config/amount" </string>
 				<string> "config/lifetime" </string>
 				<string> "config/time_scale" </string>
+				<string> "config/emitting" </string>
 				<string> "config/local_space" </string>
 				<string> "params/direction" </string>
 				<string> "params/spread" </string>
@@ -82,13 +84,13 @@
 			<string> "node_count" </string>
 			<int> 5 </int>
 			<string> "nodes" </string>
-			<int_array  len="143"> 				-1, -1, 1, 0, -1, 9, 2, 0, 3, 1, 4, 1, 5, 2, 6, 3, 7, 4, 8, 5, 9, 5, 10, 6, 0, 0, 0, 12, 11, -1, 21, 13, 5, 14, 7, 15, 8, 16, 5, 17, 9, 18, 9, 19, 10, 20, 6, 21, 6, 22, 2, 23, 2, 24, 5, 25, 10, 26, 10, 27, 5, 28, 5, 29, 5, 30, 11, 31, 2, 32, 12, 33, 12, 0, 1, 0, 35, 34, -1, 2, 36, 7, 37, 5, 0, 1, 0, 38, 38, -1, 1, 39, 13, 0, 0, 0, 41, 40, -1, 21, 42, 14, 43, 15, 44, 16, 45, 5, 46, 2, 47, 2, 48, 2, 49, 2, 50, 2, 51, 2, 52, 2, 53, 2, 54, 2, 55, 2, 56, 2, 57, 17, 58, 17, 59, 2, 60, 6, 61, 2, 62, 18, 0 </int_array>
+			<int_array  len="147"> 				-1, -1, 1, 0, -1, 10, 2, 0, 3, 1, 4, 1, 5, 2, 6, 3, 7, 4, 8, 5, 9, 5, 10, 6, 11, 2, 0, 0, 0, 13, 12, -1, 21, 14, 5, 15, 7, 16, 8, 17, 5, 18, 9, 19, 9, 20, 10, 21, 11, 22, 11, 23, 2, 24, 2, 25, 5, 26, 10, 27, 10, 28, 5, 29, 5, 30, 5, 31, 12, 32, 2, 33, 13, 34, 13, 0, 1, 0, 36, 35, -1, 2, 37, 7, 38, 5, 0, 1, 0, 39, 39, -1, 1, 40, 14, 0, 0, 0, 42, 41, -1, 22, 43, 15, 44, 16, 45, 17, 46, 5, 47, 5, 48, 2, 49, 2, 50, 2, 51, 2, 52, 2, 53, 2, 54, 2, 55, 2, 56, 2, 57, 2, 58, 2, 59, 18, 60, 18, 61, 2, 62, 11, 63, 2, 64, 19, 0 </int_array>
 			<string> "variants" </string>
-			<array  len="19" shared="false">
+			<array  len="20" shared="false">
 				<bool> True </bool>
 				<node_path> "" </node_path>
 				<real> 0 </real>
-				<resource  resource_type="Script" path="res://classes/CustomWheel.gd">  </resource>
+				<resource  resource_type="Script" path="res://classes/custom_wheel.gd">  </resource>
 				<dictionary  shared="false">
 					<string> "__editor_plugin_screen__" </string>
 					<string> "Script" </string>
@@ -221,11 +223,12 @@
 					</dictionary>
 				</dictionary>
 				<bool> False </bool>
-				<real> 1 </real>
+				<real> 0.5 </real>
 				<resource  resource_type="Shape2D" path="local://2">  </resource>
 				<matrix32> 1, 0, 0, 1, 0, 0 </matrix32>
 				<int> 1 </int>
 				<int> 0 </int>
+				<real> 1 </real>
 				<vector2> 0, 0 </vector2>
 				<real> -1 </real>
 				<resource  resource_type="Texture" path="res://sprites/wheel.png">  </resource>
@@ -233,7 +236,7 @@
 				<real> 2 </real>
 				<real> 3 </real>
 				<real> 10 </real>
-				<color> 0, 0, 0, 1 </color>
+				<color> 0, 0, 0, 0.471029 </color>
 			</array>
 			<string> "version" </string>
 			<int> 1 </int>

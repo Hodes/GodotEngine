@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resource_file type="PackedScene" subresource_count="5" version="1.1" version_name="Godot Engine v1.1.stable.custom_build">
-	<ext_resource path="res://NavButton.gd" type="Script"></ext_resource>
+	<ext_resource path="res://nav_button.gd" type="Script"></ext_resource>
 	<ext_resource path="res://sample_scenes/scripts/emitter_script.gd" type="Script"></ext_resource>
-	<ext_resource path="res://classes/TrailParticle.gd" type="Script"></ext_resource>
+	<ext_resource path="res://classes/trail_particle.gd" type="Script"></ext_resource>
 	<ext_resource path="res://sprites/tail.png" type="Texture"></ext_resource>
 	<main_resource>
 		<dictionary name="_bundled" shared="false">
@@ -184,14 +184,14 @@
 				<bool> True </bool>
 				<int> 2 </int>
 				<string> "Back" </string>
-				<resource  resource_type="Script" path="res://NavButton.gd">  </resource>
+				<resource  resource_type="Script" path="res://nav_button.gd">  </resource>
 				<string> "" </string>
 				<resource  resource_type="Script" path="res://sample_scenes/scripts/emitter_script.gd">  </resource>
-				<resource  resource_type="Script" path="res://classes/TrailParticle.gd">  </resource>
-				<int> 8 </int>
-				<int> 30 </int>
-				<real> 0.1 </real>
-				<color> 0.553524, 0, 0, 1 </color>
+				<resource  resource_type="Script" path="res://classes/trail_particle.gd">  </resource>
+				<int> 12 </int>
+				<int> 50 </int>
+				<real> 0.3 </real>
+				<color> 1, 0.979751, 0.413642, 1 </color>
 				<resource  resource_type="Texture" path="res://sprites/tail.png">  </resource>
 			</array>
 			<string> "version" </string>

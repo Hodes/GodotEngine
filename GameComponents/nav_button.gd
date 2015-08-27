@@ -4,10 +4,10 @@ extends Button
 export(String) var sceneName = ""
 
 func _ready():
-	connect("pressed", self, "onClick")
+	connect("pressed", self, "on_click")
 
 
-func onClick():
+func on_click():
 	if not sceneName.empty():
 		get_tree().change_scene("res://sample_scenes/"+self.sceneName+".xscn")
 	else:
