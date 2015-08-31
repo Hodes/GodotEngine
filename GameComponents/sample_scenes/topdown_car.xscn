@@ -17,7 +17,7 @@
 			<string> "conns" </string>
 			<int_array  len="0"> 				 </int_array>
 			<string> "names" </string>
-			<string_array  len="67">
+			<string_array  len="96">
 				<string> "World" </string>
 				<string> "Node" </string>
 				<string> "script/script" </string>
@@ -64,6 +64,8 @@
 				<string> "weight_factor" </string>
 				<string> "calculate_forces" </string>
 				<string> "reverse_power_factor" </string>
+				<string> "inertial_recovery" </string>
+				<string> "max_inertial_dist" </string>
 				<string> "Sprite" </string>
 				<string> "texture" </string>
 				<string> "CollisionShape2D" </string>
@@ -73,25 +75,52 @@
 				<string> "WheelJoint" </string>
 				<string> "PinJoint2D" </string>
 				<string> "_import_path" </string>
-				<string> "has_torque" </string>
 				<string> "has_sterring" </string>
 				<string> "grip" </string>
-				<string> "relative_rot" </string>
 				<string> "WheelJoint1" </string>
 				<string> "WheelJoint2" </string>
+				<string> "has_torque" </string>
 				<string> "WheelJoint3" </string>
 				<string> "Dbug" </string>
 				<string> "RichTextLabel" </string>
 				<string> "bbcode/enabled" </string>
 				<string> "bbcode/bbcode" </string>
 				<string> "visible_characters" </string>
+				<string> "throttle_slider" </string>
+				<string> "HSlider" </string>
+				<string> "anchor/left" </string>
+				<string> "anchor/right" </string>
+				<string> "range/min" </string>
+				<string> "range/max" </string>
+				<string> "range/step" </string>
+				<string> "range/page" </string>
+				<string> "range/value" </string>
+				<string> "range/exp_edit" </string>
+				<string> "rounded_values" </string>
+				<string> "tick_count" </string>
+				<string> "ticks_on_borders" </string>
+				<string> "Label" </string>
+				<string> "percent_visible" </string>
+				<string> "inertial_device" </string>
+				<string> "Polygon2D" </string>
+				<string> "polygon" </string>
+				<string> "uv" </string>
+				<string> "color" </string>
+				<string> "offset" </string>
+				<string> "texture/texture" </string>
+				<string> "texture/offset" </string>
+				<string> "texture/scale" </string>
+				<string> "texture/rotation" </string>
+				<string> "invert/enable" </string>
+				<string> "invert/border" </string>
+				<string> "Node2D" </string>
 			</string_array>
 			<string> "node_count" </string>
-			<int> 11 </int>
+			<int> 16 </int>
 			<string> "nodes" </string>
-			<int_array  len="247"> 				-1, -1, 1, 0, -1, 2, 2, 0, 3, 1, 0, 0, 0, 5, 4, -1, 13, 6, 2, 7, 2, 8, 3, 9, 4, 10, 5, 11, 6, 12, 7, 13, 7, 14, 5, 15, 8, 16, 5, 2, 9, 17, 10, 0, 0, 0, 19, 18, -1, 27, 20, 11, 21, 5, 22, 12, 23, 13, 24, 5, 25, 14, 26, 14, 27, 15, 28, 16, 29, 17, 30, 17, 31, 17, 32, 5, 33, 15, 34, 15, 35, 5, 36, 5, 37, 5, 38, 18, 39, 17, 40, 19, 41, 19, 2, 20, 42, 21, 43, 22, 44, 6, 45, 23, 0, 2, 0, 46, 46, -1, 2, 20, 24, 47, 25, 0, 2, 0, 48, 48, -1, 2, 49, 12, 50, 5, 0, 2, 0, 51, 51, -1, 0, 0, 2, 0, 53, 52, 26, 7, 54, 27, 20, 28, 3, 29, 55, 6, 56, 6, 57, 30, 58, 17, 0, 2, 0, 53, 59, 26, 7, 54, 27, 20, 31, 3, 32, 55, 6, 56, 6, 57, 30, 58, 17, 0, 2, 0, 53, 60, 26, 7, 54, 27, 20, 33, 3, 32, 55, 5, 56, 5, 57, 30, 58, 17, 0, 2, 0, 53, 61, 26, 7, 54, 27, 20, 34, 3, 32, 55, 5, 56, 5, 57, 30, 58, 17, 0, 0, 0, 63, 62, -1, 11, 6, 35, 7, 36, 8, 37, 9, 38, 10, 5, 11, 6, 12, 7, 13, 7, 64, 5, 65, 10, 66, 39, 0 </int_array>
+			<int_array  len="394"> 				-1, -1, 1, 0, -1, 2, 2, 0, 3, 1, 0, 0, 0, 5, 4, -1, 13, 6, 2, 7, 2, 8, 3, 9, 4, 10, 5, 11, 6, 12, 7, 13, 7, 14, 5, 15, 8, 16, 5, 2, 9, 17, 10, 0, 0, 0, 19, 18, -1, 29, 20, 11, 21, 5, 22, 12, 23, 13, 24, 5, 25, 14, 26, 14, 27, 15, 28, 16, 29, 17, 30, 17, 31, 17, 32, 5, 33, 15, 34, 15, 35, 5, 36, 5, 37, 5, 38, 18, 39, 17, 40, 19, 41, 19, 2, 20, 42, 21, 43, 22, 44, 6, 45, 23, 46, 24, 47, 25, 0, 2, 0, 48, 48, -1, 2, 20, 26, 49, 27, 0, 2, 0, 50, 50, -1, 2, 51, 12, 52, 5, 0, 2, 0, 53, 53, -1, 0, 0, 2, 0, 55, 54, 28, 5, 56, 29, 20, 30, 3, 31, 57, 6, 58, 32, 0, 2, 0, 55, 59, 28, 5, 56, 29, 20, 33, 3, 34, 57, 6, 58, 32, 0, 2, 0, 55, 60, 28, 5, 56, 29, 20, 35, 3, 34, 61, 6, 58, 36, 0, 2, 0, 55, 62, 28, 5, 56, 29, 20, 37, 3, 34, 61, 6, 58, 36, 0, 0, 0, 64, 63, -1, 11, 6, 38, 7, 39, 8, 40, 9, 41, 10, 5, 11, 6, 12, 7, 13, 7, 65, 5, 66, 10, 67, 42, 0, 0, 0, 69, 68, -1, 18, 70, 43, 71, 43, 6, 44, 7, 39, 8, 45, 9, 46, 10, 5, 11, 6, 12, 7, 72, 17, 73, 19, 74, 47, 75, 17, 76, 17, 77, 5, 78, 5, 79, 15, 80, 5, 0, 0, 0, 81, 81, -1, 16, 6, 48, 7, 2, 8, 49, 9, 50, 10, 6, 11, 6, 12, 7, 72, 17, 73, 19, 74, 19, 75, 19, 76, 17, 77, 5, 78, 5, 15, 51, 82, 52, 0, 0, 0, 19, 83, -1, 18, 21, 5, 25, 14, 26, 14, 27, 15, 28, 19, 29, 19, 30, 17, 31, 17, 32, 5, 33, 15, 34, 15, 35, 5, 36, 5, 37, 5, 38, 18, 39, 17, 40, 52, 41, 52, 0, 13, 0, 84, 84, -1, 10, 85, 53, 86, 54, 87, 55, 88, 18, 89, 56, 90, 18, 91, 57, 92, 17, 93, 5, 94, 58, 0, 0, 0, 95, 95, -1, 0, 0 </int_array>
 			<string> "variants" </string>
-			<array  len="40" shared="false">
+			<array  len="59" shared="false">
 				<resource  resource_type="Script" path="res://sample_scenes/scripts/topdown_car_controller.gd">  </resource>
 				<dictionary  shared="false">
 					<string> "__editor_plugin_screen__" </string>
@@ -101,7 +130,7 @@
 						<string> "2D" </string>
 						<dictionary  shared="false">
 							<string> "ofs" </string>
-							<vector2> -34.2633, -22.197 </vector2>
+							<vector2> -185.029, -39.4305 </vector2>
 							<string> "snap_grid" </string>
 							<bool> True </bool>
 							<string> "snap_offset" </string>
@@ -121,7 +150,7 @@
 							<string> "snap_step" </string>
 							<vector2> 10, 10 </vector2>
 							<string> "zoom" </string>
-							<real> 1 </real>
+							<real> 1.258767 </real>
 						</dictionary>
 						<string> "3D" </string>
 						<dictionary  shared="false">
@@ -233,19 +262,21 @@
 				<string> "Back" </string>
 				<resource  resource_type="Script" path="res://nav_button.gd">  </resource>
 				<string> "" </string>
-				<vector2> 114.034, 362.18 </vector2>
+				<vector2> 182, 232 </vector2>
 				<resource  resource_type="Shape2D" path="local://1">  </resource>
 				<matrix32> 1, -0, 0, 1, 0, 0 </matrix32>
 				<int> 1 </int>
 				<int> 0 </int>
-				<real> 5.102041 </real>
+				<real> 10.204082 </real>
 				<real> 0 </real>
 				<vector2> 0, 0 </vector2>
 				<real> 1 </real>
 				<resource  resource_type="Script" path="res://classes/topdown_vehicle.gd">  </resource>
-				<real> 300 </real>
-				<int> 100 </int>
+				<real> 500 </real>
+				<real> 200 </real>
 				<real> 0.5 </real>
+				<real> 0.1 </real>
+				<real> 50 </real>
 				<vector2> 2, 0 </vector2>
 				<resource  resource_type="Texture" path="res://sprites/car.png">  </resource>
 				<resource  resource_type="PackedScene" path="res://components/wheel.xscn">  </resource>
@@ -381,8 +412,12 @@
 						<string> "run_mode" </string>
 						<int> 0 </int>
 					</dictionary>
+					<string> "__editor_show_subtree" </string>
+					<bool> True </bool>
+					<string> "_editor_collapsed" </string>
+					<bool> True </bool>
 				</dictionary>
-				<real> 0.3 </real>
+				<real> 0.8 </real>
 				<vector2> 40, -63 </vector2>
 				<dictionary  shared="false">
 					<string> "__editor_plugin_screen__" </string>
@@ -516,12 +551,28 @@
 					</dictionary>
 				</dictionary>
 				<vector2> -40, 55 </vector2>
+				<real> 0.3 </real>
 				<vector2> 37.966, 54.82 </vector2>
 				<real> 5 </real>
 				<real> 30 </real>
 				<real> 718 </real>
 				<real> 593 </real>
 				<int> -1 </int>
+				<int> 3 </int>
+				<real> 432 </real>
+				<real> 292 </real>
+				<real> 46 </real>
+				<real> 0.01 </real>
+				<real> 80 </real>
+				<real> 132 </real>
+				<real> 23 </real>
+				<string> "Throttle:" </string>
+				<real> -1 </real>
+				<vector2_array  len="4"> 					-10, 0, 0, -10, 10, 0, 0, 10 </vector2_array>
+				<vector2_array  len="0"> 					 </vector2_array>
+				<color> 0, 0, 1, 1 </color>
+				<resource name=""></resource>				<vector2> 1, 1 </vector2>
+				<real> 100 </real>
 			</array>
 			<string> "version" </string>
 			<int> 1 </int>

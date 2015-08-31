@@ -23,9 +23,13 @@ var _sterring_wheels_count = 0
 var _torque_wheels_count = 0
 var _PIOVERFOUR = PI/4 # Using PI not works as const 45degree
 var _PIOVERTWO = PI/2 # Using PI not works as const 90degree
+var _inv_mass = 0
+# Must be the global position of 0,0 center of vehicle
+var _inertia = null
 
 # Debugging
 var debug = null
+var inertia_debug = null
 
 # The steering power is divided by how many wheels with torque the vehicle has
 # To low power will not make the vehicle to move
@@ -37,12 +41,17 @@ export(bool) var calculate_forces = true # If is to calculate the forces, Physic
 
 export(float) var reverse_power_factor = 0.5 # How much of the vehicle power will be available when reversing
 
+export(float) var inertial_recovery = .5
+
+export(float) var max_inertial_dist = 30
+
+
 func _ready():
+	# Set the inertia starting point
+	self._inertia = get_global_pos()
 	# Prepare with wheels instances
 	updateWheels()
-	# If is flagged to calculate the forces
-	if calculate_forces:
-		set_fixed_process(true)
+	set_fixed_process(true)
 
 # This method force the class to prepare the vehicle wheel intances
 func updateWheels():
@@ -63,42 +72,59 @@ func updateWheels():
 func _fixed_process(delta):
 	#Then process wheels
 	applySterring(delta)
-	applyVehicleForces(delta)
+	# If is flagged to calculate the forces
+	if calculate_forces:
+		applyVehicleForces(delta)
+
 
 func applySterring(delta):
 	for oWheel in _wheels:
 		if oWheel.has_sterring:
 			oWheel.steering_rot = -self.steering * _PIOVERFOUR
 
+func _integrate_forces(state):
+	_inv_mass = state.get_inverse_mass()
+
 func applyVehicleForces(delta):
+	if debug != null:
+		# Debug text
+		debug.clear()
+		
+	# Vehicle linear velocity
+	var vehicleLV = get_linear_velocity()
+		#The vehicle global pos
+	var vehicleGpos = get_global_pos()
+	
+	##
+	# CALCULATES INERTIA
+	var inertial_diff = Vector2(self._inertia.x - vehicleGpos.x, self._inertia.y - vehicleGpos.y)
+	
+	self._inertia.x += (inertial_diff.x * -1) * self.inertial_recovery 
+	self._inertia.y += (inertial_diff.y * -1) * self.inertial_recovery 
+	
+	# Inertial Length
+	var inertial_length = self._inertia.distance_to(vehicleGpos)
+	# The inertial factor is the percentage between max inertial minus 1% of max inertial, to be able
+	# to acceletare... to have a value greater than zero
+	var inertial_factor = inertial_length / self.max_inertial_dist
+	inertial_factor = clamp(inertial_factor, self.inertial_recovery, 1)
+	#inertial_factor += self.inertial_recovery
+	
 	for oWheel in _wheels:
 		# #######################
 		# Calculate the final rotation of the wheel
 		#  agregating all the separated rotations
 		var wheel_final_rotation = get_rot() + oWheel.steering_rot + oWheel.relative_rot
 		
-		#############
-		#Calculate the torque diretion vector
+		# The Direction vector of the wheel
 		var dirVec = Vector2(0.0,-1.0).rotated(wheel_final_rotation)
-		if oWheel.has_torque:
-			#Calulate the resulting power based on amount of torque wheels
-			var resulting_power = self.power / self._torque_wheels_count
-			# Multiply by motor sense of direction
-			resulting_power = resulting_power * self.throttle
-			# Reverse with 
-			if self.reverse:
-				resulting_power = resulting_power * -(self.reverse_power_factor)
-			#Control the wheels torque
-			var vWDir = Vector2(resulting_power, resulting_power)
-			vWDir = vWDir * dirVec
-			apply_impulse(oWheel.get_global_transform().get_origin()-get_pos(),vWDir)
 		
 		#############
 		#Control the wheel dynamics
 		#Get the current wheel velocity 
 		# and normalize it to use as factor to calculate the grip force
 		var wheel_linear_vel_norm = oWheel.body.get_linear_velocity().normalized()
-		var finalWeight = oWheel.body.get_linear_velocity().length() * (get_weight()/self.weight_factor)
+		var finalWeight = oWheel.body.get_linear_velocity().length() * (get_weight() / self.weight_factor)
 		
 		#Direction of the wheels grip force
 		var wheel_grip_dir = dirVec.rotated(_PIOVERTWO)
@@ -107,12 +133,12 @@ func applyVehicleForces(delta):
 		
 		# Apply the amount of force needed to pause the lateral sliding of the wheel
 		# it is the length of wheel linear velocity
-		var wheel_grip_forceFinal = wheel_grip_force * finalWeight
+		var wheel_grip_force_final = wheel_grip_force * finalWeight
 		# and then apply the wheel grip factor
-		wheel_grip_forceFinal = wheel_grip_forceFinal * oWheel.grip
+		wheel_grip_force_final = wheel_grip_force_final * oWheel.grip
 		
 		# calculate the grip force vector
-		var grip_force_vector = wheel_grip_dir * -wheel_grip_forceFinal 
+		var grip_force_vector = wheel_grip_dir * -wheel_grip_force_final 
 		
 		#Wheel sliding
 		var wheel_sliding_factor = wheel_linear_vel_norm.dot(wheel_grip_dir)
@@ -125,17 +151,40 @@ func applyVehicleForces(delta):
 		if oWheel.is_sliding: 
 			oWheel.sliding(wheel_sliding_factor)
 		
+		#############
+		#Calculate the torque based on diretion vector
+		# if the wheel is applied to
+		if oWheel.has_torque:
+			#Calulate the resulting power based on amount of torque wheels
+			var max_wheel_power = self.power / self._torque_wheels_count
+			# Multiply by motor sense of direction
+			var resulting_power = max_wheel_power * self.throttle
+			# Reverse with 
+			if self.reverse:
+				resulting_power = resulting_power * -(self.reverse_power_factor)
+			
+			var throttle_factor = 1-throttle
+			#Control the wheels torque
+			var vWDir = Vector2(resulting_power, resulting_power)
+			vWDir = vWDir * dirVec * inertial_factor * (1-abs(wheel_sliding_factor))
+			
+			# Apply the acceleration impulse
+			apply_impulse(oWheel.get_global_transform().get_origin()-get_pos(),vWDir)
+		
+		
 		# Apply the grip force to the wheel
 		apply_impulse(oWheel.get_global_transform().get_origin()-get_pos(), grip_force_vector)
 		
 		if debug != null:
-			var vehicleLV = get_linear_velocity()
-			# Debug text
-			debug.clear()
 			debug.add_text("Vehicle LV "+str(vehicleLV.x)+" , "+str(vehicleLV.y))
 			debug.newline()
-			debug.add_text("LVL "+str(vehicleLV.length()))
+			debug.add_text("slide "+str(wheel_sliding_factor))
 			debug.newline()
+			debug.add_text("LVL "+str(vehicleLV.length() ))
+			debug.newline()
+		
+		if self.inertia_debug != null:
+			self.inertia_debug.set_pos(self._inertia)
 		
 		#Set final updates to the wheel
 		oWheel.set_rot(wheel_final_rotation)
