@@ -43,3 +43,6 @@ func stop_slide():
 func sliding(sliding_factor):
 	pass
 
+func skating(skating_factor):
+	pass
+

@@ -101,6 +101,8 @@ func applyVehicleForces(delta):
 	
 	self._inertia.x += (inertial_diff.x * -1) * self.inertial_recovery 
 	self._inertia.y += (inertial_diff.y * -1) * self.inertial_recovery 
+	self._inertia.x = clamp(self._inertia.x, vehicleGpos.x - self.max_inertial_dist, vehicleGpos.x + self.max_inertial_dist) 
+	self._inertia.y = clamp(self._inertia.y, vehicleGpos.y - self.max_inertial_dist, vehicleGpos.y + self.max_inertial_dist) 
 	
 	# Inertial Length
 	var inertial_length = self._inertia.distance_to(vehicleGpos)
@@ -108,7 +110,6 @@ func applyVehicleForces(delta):
 	# to acceletare... to have a value greater than zero
 	var inertial_factor = inertial_length / self.max_inertial_dist
 	inertial_factor = clamp(inertial_factor, self.inertial_recovery, 1)
-	#inertial_factor += self.inertial_recovery
 	
 	for oWheel in _wheels:
 		# #######################
@@ -163,13 +164,34 @@ func applyVehicleForces(delta):
 			if self.reverse:
 				resulting_power = resulting_power * -(self.reverse_power_factor)
 			
-			var throttle_factor = 1-throttle
 			#Control the wheels torque
+			# with acceleration vector without influence of factors to be able to compare 
+			# with influenced vector
 			var vWDir = Vector2(resulting_power, resulting_power)
-			vWDir = vWDir * dirVec * inertial_factor * (1-abs(wheel_sliding_factor))
+			vWDir = vWDir * dirVec 
+			
+			# The acceleration vector influenced by all factors
+			var vWDirInfluenced = Vector2(vWDir.x, vWDir.y)
+		
+			# Now apply the throttle factor and the wheel sliding 
+			#   to the main acceleration vector
+			vWDirInfluenced = vWDirInfluenced * inertial_factor * (1-abs(wheel_sliding_factor))
+			# Calculates the diference bettween the length of acceleration vectors to know the wheel is skating
+			var skatin_factor = 0
+			if vWDir.length() > 0:
+				skatin_factor = 1 - ( vWDirInfluenced.length() / vWDir.length() )
+				skatin_factor = skatin_factor * self.throttle
+			## Call the method to tell the wheel is skating
+			if skatin_factor > 0.1: 
+				oWheel.skating(skatin_factor)
+			
+			if debug != null:
+				debug.add_text("SKF "+str(skatin_factor))
+				debug.newline()
+				
 			
 			# Apply the acceleration impulse
-			apply_impulse(oWheel.get_global_transform().get_origin()-get_pos(),vWDir)
+			apply_impulse(oWheel.get_global_transform().get_origin()-get_pos(), vWDirInfluenced)
 		
 		
 		# Apply the grip force to the wheel
